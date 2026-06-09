@@ -5,6 +5,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class CarbonCalculatorTest {
+
     @Test
     fun testCalculatorEngineReturnsValidMath() {
         val calculator = CarbonCalculator()
@@ -14,11 +15,36 @@ class CarbonCalculatorTest {
             electricityKwh = 10.0,
             dietType = "Vegan"
         )
-
         val result = calculator.calculate(mockInput)
-
-        // Expected: (10 * 0.17) + (10 * 0.45) + 2.9 = 1.7 + 4.5 + 2.9 = 9.1
         assertEquals(9.1, result.totalEmissions, 0.01)
         assertTrue(result.recommendations.isNotEmpty())
+    }
+
+    @Test
+    fun testHighEmissionInputsReflectCorrectPrimaryContributor() {
+        val calculator = CarbonCalculator()
+        // Force massive electricity consumption to verify contributor flag shifts accurately
+        val mockInput = CarbonInput(
+            transportKm = 2.0,
+            transportType = "Electric Vehicle",
+            electricityKwh = 150.0,
+            dietType = "Vegan"
+        )
+        val result = calculator.calculate(mockInput)
+        assertEquals("Household Energy", result.primaryContributor)
+    }
+
+    @Test
+    fun testZeroInputsCalculateCleanBaseline() {
+        val calculator = CarbonCalculator()
+        // Evaluate zeroed activity levels to ensure math boundaries don't return negative values or errors
+        val mockInput = CarbonInput(
+            transportKm = 0.0,
+            transportType = "Public Transit",
+            electricityKwh = 0.0,
+            dietType = "Vegan"
+        )
+        val result = calculator.calculate(mockInput)
+        assertTrue(result.totalEmissions >= 0.0, "Emissions should never drop below baseline zero constraints")
     }
 }

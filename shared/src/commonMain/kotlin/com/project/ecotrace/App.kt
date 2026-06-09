@@ -176,6 +176,7 @@ fun MainTrackerScreen() {
                 value = transportKm.toFloat(),
                 onValueChange = { transportKm = it.toDouble() },
                 valueRange = 0f..100f,
+                modifier = Modifier.padding(vertical = 4.dp), // add accessibility description below
                 colors = SliderDefaults.colors(
                     thumbColor = ForestGreen,
                     activeTrackColor = ForestGreen,
@@ -210,6 +211,7 @@ fun MainTrackerScreen() {
                 value = electricityKwh.toFloat(),
                 onValueChange = { electricityKwh = it.toDouble() },
                 valueRange = 0f..50f,
+                modifier = Modifier.padding(vertical = 4.dp), // Keeps structural layout symmetry for modifiers
                 colors = SliderDefaults.colors(
                     thumbColor = ForestGreen,
                     activeTrackColor = ForestGreen,
