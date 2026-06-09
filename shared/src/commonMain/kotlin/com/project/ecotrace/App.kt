@@ -76,16 +76,16 @@ fun MainTrackerScreen() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(24.dp), // Increased spacing to let elements breathe
+            .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        // App Header with strict alignment
+        // App Header
         Row(
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Default.Home, contentDescription = null, tint = ForestGreen, modifier = Modifier.size(26.dp))
+            Icon(Icons.Default.Home, contentDescription = "EcoTrace Logo", tint = ForestGreen, modifier = Modifier.size(26.dp))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "EcoTrace",
@@ -103,7 +103,7 @@ fun MainTrackerScreen() {
             textAlign = TextAlign.Center
         )
 
-        // 🌟 PREMIUM GRADIENT DASHBOARD CARD (Hero Element)
+        // Gradient Dashboard Card
         val gradientBrush = Brush.linearGradient(
             colors = listOf(MintGreen, ForestGreen)
         )
@@ -164,7 +164,7 @@ fun MainTrackerScreen() {
         }
 
         // 🚗 TRANSPORTATION SECTION
-        InputSectionCard(title = "Transportation", icon = Icons.Default.LocationOn) {
+        InputSectionCard(title = "Transportation", icon = Icons.Default.LocationOn, contentDescription = "Transportation Sector") {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -186,21 +186,19 @@ fun MainTrackerScreen() {
             Text("Vehicle Type", fontSize = 13.sp, color = MutedGray, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 4.dp))
             val vehicles = listOf("Petrol Car", "Diesel Car", "Electric Vehicle", "Public Transit", "Motorbike")
 
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    vehicles.forEach { type ->
-                        StyledFilterChip(selected = transportType == type, label = type, onClick = { transportType = type })
-                    }
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                vehicles.forEach { type ->
+                    StyledFilterChip(selected = transportType == type, label = type, onClick = { transportType = type })
                 }
             }
         }
 
         // ⚡ ENERGY SECTION
-        InputSectionCard(title = "Household Energy", icon = Icons.Default.Home) {
+        InputSectionCard(title = "Household Energy", icon = Icons.Default.Home, contentDescription = "Household Energy Sector") {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -221,7 +219,7 @@ fun MainTrackerScreen() {
         }
 
         // 🍔 DIETARY HABITS SECTION
-        InputSectionCard(title = "Dietary Habits", icon = Icons.Default.ShoppingCart) {
+        InputSectionCard(title = "Dietary Habits", icon = Icons.Default.ShoppingCart, contentDescription = "Dietary Regime Sector") {
             Text("Diet Regime", fontSize = 13.sp, color = MutedGray, fontWeight = FontWeight.Bold)
             val diets = listOf("Meat Heavy", "Vegetarian", "Vegan")
 
@@ -260,7 +258,7 @@ fun MainTrackerScreen() {
                 ) {
                     Icon(
                         imageVector = Icons.Default.Info,
-                        contentDescription = null,
+                        contentDescription = "Actionable Recommendation Tip",
                         tint = MintGreen,
                         modifier = Modifier.size(20.dp)
                     )
@@ -281,7 +279,12 @@ fun MainTrackerScreen() {
 }
 
 @Composable
-fun InputSectionCard(title: String, icon: androidx.compose.ui.graphics.vector.ImageVector, content: @Composable ColumnScope.() -> Unit) {
+fun InputSectionCard(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    contentDescription: String,
+    content: @Composable ColumnScope.() -> Unit
+) {
     Card(
         colors = CardDefaults.cardColors(containerColor = PureWhite),
         shape = RoundedCornerShape(20.dp),
@@ -295,7 +298,7 @@ fun InputSectionCard(title: String, icon: androidx.compose.ui.graphics.vector.Im
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(icon, contentDescription = null, tint = ForestGreen, modifier = Modifier.size(20.dp))
+                Icon(icon, contentDescription = contentDescription, tint = ForestGreen, modifier = Modifier.size(20.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(title, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = ForestGreen)
             }
@@ -305,17 +308,14 @@ fun InputSectionCard(title: String, icon: androidx.compose.ui.graphics.vector.Im
 }
 
 @Composable
-fun RowScope.StyledFilterChip(selected: Boolean, label: String, onClick: () -> Unit) {
-    // Micro-interactions: Smooth colour transition animation on select
+fun StyledFilterChip(selected: Boolean, label: String, onClick: () -> Unit) {
     val animatedBgColor by animateColorAsState(if (selected) ForestGreen else PureWhite)
     val animatedLabelColor by animateColorAsState(if (selected) PureWhite else CharcoalGray)
     val animatedBorderColor by animateColorAsState(if (selected) ForestGreen else Color.Black.copy(alpha = 0.12f))
 
     Surface(
         modifier = Modifier
-            .wrapContentSize() // Tells the container to dynamically scale to fit its inner text
-            .weight(1f)
-            .height(38.dp)
+            .wrapContentSize()
             .border(1.dp, animatedBorderColor, RoundedCornerShape(10.dp)),
         color = animatedBgColor,
         shape = RoundedCornerShape(10.dp),
@@ -328,7 +328,7 @@ fun RowScope.StyledFilterChip(selected: Boolean, label: String, onClick: () -> U
                 fontSize = 12.sp,
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
                 textAlign = TextAlign.Center,
-                maxLines = 1 // Forces text to stay on a single line cleanly
+                maxLines = 1
             )
         }
     }
